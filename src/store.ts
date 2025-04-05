@@ -44,10 +44,16 @@ const usePasswordStore = create<PasswordState>((set) => ({
       if (state.includeUppercase) characters += uppercase;
       if (state.includeLowercase) characters += lowercase;
 
-      let password = "";
-      for (let i = 0; i < state.length; i++) {
-        password += characters[Math.random() * characters.length];
+      if (characters.length === 0) {
+        return {
+          generatedPassword: "Please select at least one character set.",
+        };
       }
+
+      const password = Array.from({ length: state.length }, () => {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        return characters[randomIndex];
+      }).join("");
 
       return { generatedPassword: password };
     }),
